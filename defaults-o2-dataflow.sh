@@ -46,6 +46,7 @@ overrides:
       - FreeType:(?!osx)
       - Python-modules
       - libxml2
+      - OpenSSL
       - "GCC-Toolchain:(?!osx)"
   GSL:
     prefer_system_check: |
