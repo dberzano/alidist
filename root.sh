@@ -49,6 +49,22 @@ case $ARCHITECTURE in
   ;;
 esac
 
+if [[ $ALIEN_RUNTIME_VERSION ]]; then
+  # AliEn-Runtime: we take OpenSSL, XRootD and libxml2 from there, in case they
+  # were not taken from the system
+  OPENSSL_ROOT=${OPENSSL_ROOT:+$ALIEN_RUNTIME_ROOT}
+  XROOTD_ROOT=${XROOTD_VERSION:+$ALIEN_RUNTIME_ROOT}
+  LIBXML2_ROOT=${LIBXML2_VERSION:+$ALIEN_RUNTIME_ROOT}
+  [[ $SYS_OPENSSL_ROOT ]] && OPENSSL_ROOT=$SYS_OPENSSL_ROOT
+fi
+
+# What do we have?
+set +x
+echo "OpenSSL: $OPENSSL_ROOT"
+echo "XRootD:  $XROOTD_ROOT"
+echo "libxml2: $LIBXML2_ROOT"
+false
+
 if [[ $ALICE_DAQ ]]; then
   # DAQ requires static ROOT, only supported by ./configure (not CMake).
   export ROOTSYS=$BUILDDIR
@@ -92,6 +108,7 @@ else
         ${ENABLE_COCOA:+-Dcocoa=ON}                                                      \
         -DCMAKE_CXX_COMPILER=$COMPILER_CXX                                               \
         -DCMAKE_C_COMPILER=$COMPILER_CC                                                  \
+        -DCMAKE_Fortran_COMPILER=gfortran                                                \
         -DCMAKE_LINKER=$COMPILER_LD                                                      \
         ${GCC_TOOLCHAIN_VERSION:+-DCMAKE_EXE_LINKER_FLAGS="-L$GCC_TOOLCHAIN_ROOT/lib64"} \
         ${OPENSSL_ROOT:+-DOPENSSL_ROOT=$ALIEN_RUNTIME_ROOT}                              \
