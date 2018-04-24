@@ -31,6 +31,14 @@ overrides:
   AliRoot:
     version: "%(commit_hash)s_ROOT6"
     tag: v5-09-27
+    requires:
+      - JAliEn-ROOT
+      - ROOT
+      - DPMJET
+      - fastjet:(?!.*ppc64)
+      - GEANT3
+      - GEANT4_VMC
+      - Vc
   AliPhysics:
     version: "%(commit_hash)s_ROOT6"
     tag: v5-09-27-01

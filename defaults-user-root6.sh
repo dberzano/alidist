@@ -9,6 +9,7 @@ overrides:
     version: "%(tag_basename)s"
     tag: v5-09-27
     requires:
+      - JAliEn-ROOT
       - ROOT
       - fastjet:(?!.*ppc64)
       - Vc
