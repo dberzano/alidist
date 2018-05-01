@@ -1,6 +1,6 @@
 package: O2
 version: "%(tag_basename)s"
-tag: dev
+tag: test-fix
 requires:
   - arrow
   - FairRoot
@@ -15,7 +15,7 @@ requires:
 build_requires:
   - RapidJSON
   - googlebenchmark
-source: https://github.com/AliceO2Group/AliceO2
+source: https://github.com/dberzano/AliceO2
 prepend_path:
   ROOT_INCLUDE_PATH: "$O2_ROOT/include"
 incremental_recipe: |
