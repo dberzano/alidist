@@ -40,6 +40,7 @@ overrides:
       - "GCC-Toolchain:(?!osx)"
       - libpng
       - lzma
+      - arrow
   AliRoot:
     version: "%(commit_hash)s_O2"
     requires:

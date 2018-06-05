@@ -90,6 +90,7 @@ if [[ $ALICE_DAQ ]]; then
   NO_FEATURES="ssl alien"
 else
   # Normal ROOT build.
+  export ARROW_HOME=$ARROW_ROOT
   cmake $SOURCEDIR                                                                       \
         -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE                                             \
         -DCMAKE_INSTALL_PREFIX=$INSTALLROOT                                              \
@@ -106,6 +107,7 @@ else
         ${NO_PYTHON:+-Dpython=OFF}                                                       \
         ${IS_PYTHON3:+-Dpython3=ON}                                                      \
         ${ENABLE_COCOA:+-Dcocoa=ON}                                                      \
+        ${ARROW_ROOT:+-Darrow=ON}                                                        \
         -DCMAKE_CXX_COMPILER=$COMPILER_CXX                                               \
         -DCMAKE_C_COMPILER=$COMPILER_CC                                                  \
         -DCMAKE_Fortran_COMPILER=gfortran                                                \
@@ -131,7 +133,8 @@ else
         -DCMAKE_PREFIX_PATH="$FREETYPE_ROOT;$SYS_OPENSSL_ROOT;$GSL_ROOT;$ALIEN_RUNTIME_ROOT;$PYTHON_ROOT;$PYTHON_MODULES_ROOT;$LIBPNG_ROOT;$LZMA_ROOT"
   FEATURES="builtin_pcre mathmore xml ssl opengl minuit2 http
             pythia6 roofit soversion vdt ${CXX11:+cxx11} ${CXX14:+cxx14} ${XROOTD_ROOT:+xrootd}
-            ${ALIEN_RUNTIME_ROOT:+alien monalisa} ${IS_PYTHON3:+python python3}"
+            ${ALIEN_RUNTIME_ROOT:+alien monalisa} ${IS_PYTHON3:+python python3}
+            ${ARROW_VERSION:+arrow}"
   NO_FEATURES="root7 ${LZMA_VERSION:+builtin_lzma} ${LIBPNG_VERSION:+builtin_png} krb5 gviz ${NO_PYTHON:+python python3}"
 
   if [[ $ENABLE_COCOA ]]; then

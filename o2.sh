@@ -92,6 +92,9 @@ if [[ $ALIBUILD_O2_TESTS ]]; then
   CXXFLAGS="${CXXFLAGS} -Werror"
 fi
 
+# Enable Ninja if found
+type ninja &> /dev/null && CMAKE_GENERATOR="Ninja" || CMAKE_GENERATOR=
+
 cmake $SOURCEDIR -DCMAKE_INSTALL_PREFIX=$INSTALLROOT                                        \
       ${CMAKE_GENERATOR:+-G "$CMAKE_GENERATOR"}                                             \
       -DCMAKE_MODULE_PATH="$SOURCEDIR/cmake/modules;$FAIRROOT_ROOT/share/fairbase/cmake/modules;$FAIRROOT_ROOT/share/fairbase/cmake/modules_old"  \
