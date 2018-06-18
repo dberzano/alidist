@@ -1,27 +1,31 @@
 package: parquet-cpp
-version: release-0.1-rc0
+version: v1.4.0
+tag: apache-parquet-cpp-1.4.0
 source: https://github.com/apache/parquet-cpp
+requires:
+  - boost
+  - arrow
 build_requires:
-- protobuf
-- snappy
-- zlib
-- thrift
-build_requires:
-- CMake
-- googletest
+  - CMake
+  - "GCC-Toolchain:(?!osx)"
+  - thrift
 ---
+mkdir -p "$INSTALLROOT"
+case $ARCHITECTURE in
+  osx*)
+    export THRIFT_HOME=$(brew --prefix thrift)
+    [[ ! $BOOST_ROOT ]] && BOOST_ROOT=$(brew --prefix boost)
+  ;;
+esac
 
-export THRIFT_HOME=$(brew --prefix thrift)
-cmake $SOURCEDIR                                              \
-      -DCMAKE_INSTALL_PREFIX=$INSTALLROOT                     \
-      ${BOOST_ROOT:+-DBOOST_ROOT=$BOOST_ROOT}                 \
-      ${BOOST_ROOT:+-DBoost_DIR=$BOOST_ROOT}                  \
-      ${BOOST_ROOT:+-DBoost_INCLUDE_DIR=$BOOST_ROOT/include}
+cmake $SOURCEDIR                                \
+      -DCMAKE_INSTALL_PREFIX=$INSTALLROOT       \
+      ${CMAKE_GENERATOR:+-G "$CMAKE_GENERATOR"} \
+      -DPARQUET_BUILD_TESTS=OFF                 \
+      -DARROW_HOME=${ARROW_ROOT}
+cmake --build . -- ${JOBS:+-j$JOBS} install
 
-make ${JOBS+-j $JOBS}
-make install
-
-#ModuleFile
+# Modulefile
 MODULEDIR="$INSTALLROOT/etc/modulefiles"
 MODULEFILE="$MODULEDIR/$PKGNAME"
 mkdir -p "$MODULEDIR"
@@ -34,11 +38,9 @@ proc ModulesHelp { } {
 set version $PKGVERSION-@@PKGREVISION@$PKGHASH@@
 module-whatis "ALICE Modulefile for $PKGNAME $PKGVERSION-@@PKGREVISION@$PKGHASH@@"
 # Dependencies
-module load BASE/1.0
+module load BASE/1.0 ${BOOST_VERSION:+boost/$BOOST_VERSION-$BOOST_REVISION} arrow/$ARROW_VERSION-$ARROW_REVISION
 # Our environment
-setenv MESOS_ROOT \$::env(BASEDIR)/$PKGNAME/\$version
-prepend-path PYTHONPATH \$::env(MESOS_ROOT)/lib/python2.7/site-packages
-prepend-path LD_LIBRARY_PATH \$::env(MESOS_ROOT)/lib
-$([[ ${ARCHITECTURE:0:3} == osx ]] && echo "prepend-path DYLD_LIBRARY_PATH \$::env(MESOS_ROOT)/lib")
-prepend-path PATH \$::env(MESOS_ROOT)/bin
+set PARQUET_ROOT \$::env(BASEDIR)/$PKGNAME/\$version
+prepend-path LD_LIBRARY_PATH \$PARQUET_ROOT/lib
+$([[ ${ARCHITECTURE:0:3} == osx ]] && echo "prepend-path DYLD_LIBRARY_PATH \$PARQUET_ROOT/lib")
 EoF
