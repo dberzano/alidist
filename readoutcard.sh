@@ -1,6 +1,6 @@
 package: ReadoutCard
 version: "%(tag_basename)s"
-tag: v0.9.14
+tag: v0.9.15
 requires:
   - boost
   - "GCC-Toolchain:(?!osx)"
@@ -32,6 +32,8 @@ cmake $SOURCEDIR                                                      \
 
 cp ${BUILDDIR}/compile_commands.json ${INSTALLROOT}
 make ${JOBS+-j $JOBS} install
+
+# useless change to trigger rebuild: +++++
 
 #ModuleFile
 mkdir -p etc/modulefiles
