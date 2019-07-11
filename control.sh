@@ -8,6 +8,13 @@ requires:
 ---
 #!/bin/bash -e
 
+# Extra RPM dependencies
+cat > $INSTALLROOT/.rpm-extra-deps <<EOF
+axel >= 2.4
+python36 <= 3.7
+jq >= 1.5
+EOF
+
 mkdir -p etc/modulefiles
 cat > etc/modulefiles/$PKGNAME <<EoF
 #%Module1.0
